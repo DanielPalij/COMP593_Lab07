@@ -8,6 +8,7 @@ Usage:
 """
 import os
 import inspect
+import sqlite3
 
 def main():
     global db_path
@@ -18,6 +19,29 @@ def main():
 def create_people_table():
     """Creates the people table in the database"""
     # TODO: Create function body
+    con = sqlite3.connect('social_network.db')
+    cur = con.cursor()
+    ppl_tbl_query = """
+                
+                (
+
+        id INTEGER PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        address TEXT NOT NULL,
+        city TEXT NOT NULL,
+        province TEXT NOT NULL,
+        country TEXT NOT NULL,
+        phone TEXT,
+        bio TEXT,
+        age INTERGER,
+        created_at DATETIME NOT NULL
+        updated_at DATETIME NOT NULL
+
+    );
+    """
+    
+    
     return
 
 def populate_people_table():
