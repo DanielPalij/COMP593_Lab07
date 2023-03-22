@@ -20,36 +20,36 @@ def main():
 
 def create_people_table():
     """Creates the people table in the database"""
-    # TODO: Create function body
+    
     con = sqlite3.connect('social_network.db')
     cur = con.cursor()
-    ppl_tbl_query = """
-                
-                (
-
-        id INTEGER PRIMARY KEY,
-        name TEXT NOT NULL,
-        email TEXT NOT NULL,
-        address TEXT NOT NULL,
-        city TEXT NOT NULL,
-        province TEXT NOT NULL,
-        country TEXT NOT NULL,
-        phone TEXT,
-        bio TEXT,
-        age INTERGER,
-        created_at DATETIME NOT NULL
-        updated_at DATETIME NOT NULL
-
-    );
+    create_ppl_tbl_query = """
+        CREATE TABLE IF NOT EXISTS people
+        (
+            id INTEGER PRIMARY KEY,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            address TEXT NOT NULL,
+            city TEXT NOT NULL,
+            province TEXT NOT NULL,
+            bio TEXT,
+            age INTEGER,
+            created_at DATETIME NOT NULL,
+            updated_at DATETIME NOT NULL
+        
+        );
     """
-    cur.execute(ppl_tbl_query)
+
+    cur.execute(create_ppl_tbl_query)
     con.commit()
     con.close()
+    
     return
+    
 
 def populate_people_table():
     """Populates the people table with 200 fake people"""
-    # TODO: Create function body
+   
     con = sqlite3.connect('social_network.db')
     cur = con.cursor()
     
@@ -69,15 +69,15 @@ def populate_people_table():
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 """
     fake = Faker("en_CA")
-    for _ in range(10):             # Generate fake data for 10 provinces
+    for _ in range(200):             
         new_person = (
             fake.name(),
             fake.email(),
             fake.address(),
             fake.city(),
-            fake.administrative_unit(),
-            fake.bio(words=5),
-            fake.age(min=1, max=99),
+            fake.province(),
+            fake.sentence(nb_words=10),
+            fake.random_int(min=1, max=100),
             datetime.now(),
             datetime.now())
         cur.execute(add_person_query, new_person)   
