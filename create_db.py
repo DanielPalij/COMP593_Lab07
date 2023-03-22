@@ -9,6 +9,8 @@ Usage:
 import os
 import inspect
 import sqlite3
+from faker import Faker
+from datetime import datetime 
 
 def main():
     global db_path
@@ -40,13 +42,48 @@ def create_people_table():
 
     );
     """
-    
-    
+    cur.execute(ppl_tbl_query)
+    con.commit()
+    con.close()
     return
 
 def populate_people_table():
     """Populates the people table with 200 fake people"""
     # TODO: Create function body
+    con = sqlite3.connect('social_network.db')
+    cur = con.cursor()
+    
+    add_person_query = """
+        INSERT INTO people
+    (
+        name,
+        email,
+        address,
+        city,
+        province,
+        bio,
+        age,
+        created_at,
+        updated_at
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+"""
+    fake = Faker("en_CA")
+    for _ in range(10):             # Generate fake data for 10 provinces
+        new_person = (
+            fake.name(),
+            fake.email(),
+            fake.address(),
+            fake.city(),
+            fake.administrative_unit(),
+            fake.bio(words=5),
+            fake.age(min=1, max=99),
+            datetime.now(),
+            datetime.now())
+        cur.execute(add_person_query, new_person)   
+    con.commit()
+    con.close()
+
     return
 
 def get_script_dir():
